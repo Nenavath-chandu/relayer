@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+dist/
+build/
+.vite/
+
+# Environment variables — NEVER commit these!
+backend/.env
+
+# Temp files created by backend
+backend/temp_*
+backend/output.txt
+backend/error.txt
+backend/test.jpg
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
