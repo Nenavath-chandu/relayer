@@ -1,126 +1,75 @@
-# Reality Layer 🧠
+# ReLayer — AI Truth Social Platform
 
-> **AI-Powered Misinformation Detection Platform**  
-> Built with Google Gemini (multimodal AI), FastAPI, and React.
+<div align="center">
+  <img src="https://img.shields.io/badge/Status-Beta-purple" alt="Status" />
+  <img src="https://img.shields.io/badge/Platform-Web%20App-blue" alt="Platform" />
+  <img src="https://img.shields.io/badge/AI-MultiModal-green" alt="AI" />
+</div>
 
-Reality Layer analyzes text, images, and videos to detect fake news, misleading content, and AI-generated media — then breaks it down claim-by-claim with a 0-100 Credibility Score.
+<br/>
 
----
+ReLayer is a **next-generation AI-powered social media platform** where truth is the currency. It combines the rapid verification capabilities of advanced Large Language Models (LLMs) with a robust community reputation system to create a safe, engaging, and trustworthy social graph.
 
-## ✨ Features
+## 🚀 The Vision & Future Scope
 
-| Feature | Description |
-|---|---|
-| 🔍 **AI Fact-Checking** | Powered by Google Gemini 2.5 Flash with live internet search grounding |
-| 📊 **Reality Score** | Animated 0-100 credibility ring with color coding |
-| 🧬 **X-Ray Analysis** | Breaks content into individual claims and fact-checks each one |
-| 🖼️ **Image/Video Detection** | Upload media to detect AI-generated artifacts |
-| 🌍 **Regional News Feed** | Live verified news by World / India / State / City |
-| 🚨 **Fake News Radar** | Shows top viral fake stories debunked in your area |
-| 📱 **Shorts Checker** | Fact-check viral reels and YouTube Shorts |
-| 📄 **PDF Export** | Download a professional Intelligence Brief of any result |
+Why build this when people can just use ChatGPT or Claude for free? 
 
----
+Because **LLMs are tools, but ReLayer is a platform.** A free LLM can check *one* post, but ReLayer curates a **global truth feed**, assigns reputation scores to creators, lets users post and interact, and most importantly, ensures *every* piece of content carries a Community + AI credibility badge.
 
-## 🚀 Quick Start
-
-### 1. Clone the project
-```bash
-git clone https://github.com/YOUR_USERNAME/reality-layer.git
-cd reality-layer
-```
-
-### 2. Set up the Backend
-
-```bash
-cd backend
-python -m venv venv
-venv\Scripts\activate   # Windows
-pip install -r requirements.txt
-```
-
-**Create your environment file:**
-```bash
-copy .env.example .env
-```
-Then open `backend/.env` and fill in your API keys (see below).
-
-**Start the backend:**
-```bash
-uvicorn main:app --reload --host 0.0.0.0
-```
-
-### 3. Set up the Frontend
-
-```bash
-cd ..              # back to project root
-npm install
-npm run dev
-```
-
-Open **http://localhost:5173** in your browser.
+**Our Core Targets:**
+1. **Protect Users:** Shield people from fraud, deepfakes, financial scams, and dangerous health misinformation.
+2. **Reward Truth:** Build a "Reality Score" (like a credit score for truth) where users earn credibility for fact-checking and sharing accurate information.
+3. **Monetize Intelligence:** Offer a premium subscription (ReLayer Pro) for users, journalists, and businesses requiring advanced features like Audio Deepfake Detection and PDF Intelligence Briefs.
+4. **Grow a Social Ecosystem:** Evolve beyond a simple checker utility into a platform people check daily, exactly like Twitter/X or Instagram, but optimized for trust rather than outrage.
 
 ---
 
-## 🔑 API Keys (Where to Get Them)
+## 💎 Features & Monetization Strategy
 
-All keys go in `backend/.env`. The file already has examples — just replace the placeholder values.
-
-| Key | Required? | What it does | Get it free |
-|---|---|---|---|
-| `GEMINI_API_KEY` | ✅ **Yes** | Powers all AI analysis | [aistudio.google.com](https://aistudio.google.com/app/apikey) |
-| `NEWS_API_KEY` | ⚠️ Optional | Live news on Home screen (otherwise shows demo data) | [newsapi.org/register](https://newsapi.org/register) |
-| `GOOGLE_FACTCHECK_KEY` | ⚠️ Optional | Cross-references journalist fact-check databases | [console.cloud.google.com](https://console.cloud.google.com) → Enable "Fact Check Tools API" |
-
----
-
-## 🏗️ Tech Stack
-
-**Backend:** Python · FastAPI · Google Gemini 2.5 Flash · NewsAPI · Google Fact Check Tools  
-**Frontend:** React (Vite) · Vanilla CSS
+| Feature | Description | Business Moat |
+|---------|-------------|---------------|
+| **Truth Feed** | Social feed where every post displays an AI Trust Score (0-100%) and interactive engagement metrics (Likes, Comments). | Keeps users scrolling daily, rather than just visiting for one-off checks. |
+| **FactReels** | A TikTok/Shorts-style vertical player for verifying viral videos, with instant AI verdict overlays. | Hooks the Gen-Z audience with a familiar interface focused on viral media. |
+| **TruthBoard** | A community voting system where users upvote/downvote AI fact-checks to provide a "Second Opinion". | Builds community investment and leverages human-in-the-loop validation. |
+| **Reality Score** | A persistent reputation system and leaderboard for "Truth Defenders". | Gamification drives daily active use and high-quality user contributions. |
+| **Threat Map** | Heatmaps and leaderboards showing trending misinformation categorized by domain (Finance, Health, etc). | High utility for researchers and journalists. |
+| **ReLayer Pro (Premium)** | A ₹99/month subscription unlocking **Audio deepfake detection**, unlimited AI scans, bulk checking, and PDF report exports. | **Direct revenue generation.** Monetizes power users who need advanced security. |
 
 ---
 
-## 📁 Project Structure
+## 🛠️ Technology Stack & Architecture
 
-```
-reality-layer/
-├── backend/
-│   ├── main.py          ← FastAPI server + all AI logic
-│   ├── .env             ← Your API keys (NOT committed to GitHub)
-│   ├── .env.example     ← Template showing what keys to add
-│   └── requirements.txt
-├── src/
-│   ├── screens/
-│   │   ├── FeedScreen.jsx      ← Home: regional news + fake news radar
-│   │   ├── AnalyzeScreen.jsx   ← Check: text/image/video/reel analyzer
-│   │   ├── ExploreScreen.jsx   ← Explore: regional misinformation map
-│   │   ├── ShortsScreen.jsx    ← Shorts: viral reel fact-checker
-│   │   ├── DetailScreen.jsx    ← Results: intelligence dashboard
-│   │   └── HistoryScreen.jsx   ← Past analyses
-│   ├── data/
-│   │   ├── mockData.js         ← Demo data used when APIs are offline
-│   │   └── history.js          ← localStorage history manager
-│   └── styles/app.css
-└── package.json
-```
+- **Frontend:** React, Vanilla CSS (Custom Glassmorphism, CSS Animations, Custom Design Tokens)
+- **Backend Model:** Python (FastAPI integration ready) 
+- **AI Core:** Multi-modal reasoning (Text, Image, Audio, Video analysis)
+- **State Management:** React Hooks
+- **UI Architecture:** Mobile-first PWA approach (Max-width 430px) for an app-like feel on the web.
 
 ---
 
-## 🌐 Deployment
+## 📱 Screen Capabilities
 
-### Frontend → Vercel (Free)
-1. Push this repo to GitHub
-2. Go to [vercel.com](https://vercel.com) → New Project → Import repo
-3. Done! You get a live URL like `reality-layer.vercel.app`
-
-### Backend → Railway (Free $5/month credit)
-1. Go to [railway.app](https://railway.app) → New Project → Deploy from repo
-2. Set **Root Directory** to `backend/`
-3. Add your environment variables in Railway's dashboard
-4. Update the API base URL in `src/screens/FeedScreen.jsx` and `src/screens/AnalyzeScreen.jsx` to point to your Railway URL
+- **Home (Feed):** Global live stats, trending hashtags, verified news mixed with debunked local threats, social interaction buttons.
+- **Explore:** Threat intelligence dashboard with "Trending Lies" leaderboards and domain-based breakdown charts.
+- **Check (Analyze):** Multi-modal upload (Text, Image, Video, Audio), domain specification, animated AI trust scanning rings.
+- **FactReels (Shorts):** Swipeable video fact-checking interface with expandable detailed AI summaries.
+- **Community:** TruthBoard feed showing community fact-checks, upvoting, and the weekly Truth Defender Leaderboard.
+- **Profile:** User metrics, earned achievement badges, Reality Score ring, and Pro upgrade CTA.
 
 ---
 
-## 📝 License
-MIT — Free to use, modify, and distribute.
+## 🏃 Getting Started (Development)
+
+1. Clone the repository
+2. Navigate to the frontend directory
+3. Install dependencies: `npm install`
+4. Run the development server: `npm run dev`
+5. The app will launch at `http://localhost:5173`
+
+*Note: The frontend operates with rich mock data simulating backend AI responses to provide a complete view of the application's capabilities. A Python backend is designed to handle the `/analyze` POST route for production deployment.*
+
+---
+
+<div align="center">
+  <i>"Using AI to bring Reality back to the internet."</i>
+</div>

@@ -1,12 +1,16 @@
 import { useState } from 'react'
 import FeedScreen from './screens/FeedScreen'
-import AnalyzeScreen from './screens/AnalyzeScreen'
-import DetailScreen from './screens/DetailScreen'
 import ExploreScreen from './screens/ExploreScreen'
-import ShortsScreen from './screens/ShortsScreen'
+import CreateScreen from './screens/CreateScreen'
+import ActivityScreen from './screens/ActivityScreen'
+import ProfileScreen from './screens/ProfileScreen'
+
+import AnalyzeScreen from './screens/AnalyzeScreen'
+import StudioScreen from './screens/StudioScreen'
+import DetailScreen from './screens/DetailScreen'
+
 import NavBar from './components/NavBar'
 import './styles/App.css'
-import HistoryScreen from './screens/HistoryScreen'
 
 export default function App() {
   const [screen, setScreen] = useState('feed')
@@ -18,60 +22,42 @@ export default function App() {
     setScreen('detail')
   }
 
-  function goToFeed() {
-    setActiveTab('feed')
-    setScreen('feed')
+  function goToTab(tabName) {
+    setActiveTab(tabName)
+    setScreen(tabName)
   }
 
-  function goToAnalyze() {
-    setActiveTab('analyze')
-    setScreen('analyze')
-  }
-
-  function goToExplore() {
-    setActiveTab('explore')
-    setScreen('explore')
-  }
-
-  function goToShorts() {
-    setActiveTab('shorts')
-    setScreen('shorts')
-  }
-
-  function goToHistory() {
-    setActiveTab('history')
-    setScreen('history')
-  }
+  function goToAnalyze() { setScreen('analyze') }
+  function goToStudio() { setScreen('studio') }
 
   function goBack() {
-    if (activeTab === 'feed') setScreen('feed')
-    else if (activeTab === 'analyze') setScreen('analyze')
-    else if (activeTab === 'explore') setScreen('explore')
-    else if (activeTab === 'shorts') setScreen('shorts')
-    else setScreen('history')
+    // Return to the last active base tab
+    setScreen(activeTab)
   }
 
   return (
     <div className="app-shell">
       <div className="screen-container">
-        {screen === 'feed'    && <FeedScreen onSelectPost={goToDetail} />}
-        {screen === 'analyze' && <AnalyzeScreen onBack={goToFeed} onResult={goToDetail} />}
-        {screen === 'explore' && <ExploreScreen />}
-        {screen === 'shorts'  && <ShortsScreen onAnalyze={(url, file) => {
-          goToAnalyze()
-        }} />}
-        {screen === 'detail'  && <DetailScreen post={selectedPost} onBack={goBack} />}
-        {screen === 'history' && <HistoryScreen onSelectPost={goToDetail} />}
+        {screen === 'feed'      && <FeedScreen onSelectPost={goToDetail} />}
+        {screen === 'explore'   && <ExploreScreen />}
+        {screen === 'create'    && <CreateScreen onScan={goToAnalyze} onRemix={goToStudio} onBack={() => goToTab('feed')} />}
+        {screen === 'activity'  && <ActivityScreen onSelectPost={goToDetail} />}
+        {screen === 'profile'   && <ProfileScreen onBack={goBack} />}
+        
+        {/* Sub-flows */}
+        {screen === 'analyze'   && <AnalyzeScreen onBack={goBack} onResult={goToDetail} />}
+        {screen === 'studio'    && <StudioScreen onBack={goBack} />}
+        {screen === 'detail'    && <DetailScreen post={selectedPost} onBack={goBack} onRemix={goToStudio} />}
       </div>
 
-      {screen !== 'detail' && (
+      {(screen === 'feed' || screen === 'explore' || screen === 'create' || screen === 'activity' || screen === 'profile') && (
         <NavBar
           activeTab={activeTab}
-          onFeed={goToFeed}
-          onAnalyze={goToAnalyze}
-          onExplore={goToExplore}
-          onShorts={goToShorts}
-          onHistory={goToHistory}
+          onFeed={() => goToTab('feed')}
+          onExplore={() => goToTab('explore')}
+          onCreate={() => goToTab('create')}
+          onActivity={() => goToTab('activity')}
+          onProfile={() => goToTab('profile')}
         />
       )}
     </div>

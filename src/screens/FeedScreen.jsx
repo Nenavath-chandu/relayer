@@ -1,164 +1,137 @@
-import { useState, useEffect } from 'react'
-import { REAL_NEWS, REGIONAL_FAKE_NEWS } from '../data/mockData'
-
-const REGIONS = [
-  { key: 'world', label: '🌍 World' },
-  { key: 'india', label: '🇮🇳 India' },
-  { key: 'state', label: '🗺️ State' },
-  { key: 'city',  label: '🏙️ City' },
-]
-
-const CATEGORY_COLORS = {
-  Technology: '#6366f1', Climate: '#10b981', Economy: '#f59e0b',
-  Space: '#8b5cf6', Finance: '#3b82f6', Infrastructure: '#14b8a6',
-  Environment: '#22c55e', Education: '#f97316', Civic: '#64748b',
-  Health: '#ec4899',
-}
-
-const API_BASE = `http://${window.location.hostname}:8000`
+import { useState } from 'react'
+import SubscriptionModal from '../components/SubscriptionModal'
 
 export default function FeedScreen({ onSelectPost }) {
-  const [region, setRegion] = useState('india')
-  const [liveNews, setLiveNews] = useState([])
-  const [newsLoading, setNewsLoading] = useState(false)
-  const [hasNewsAPI, setHasNewsAPI] = useState(false)
-
-  // Fetch real news from backend whenever region changes
-  useEffect(() => {
-    setNewsLoading(true)
-    fetch(`${API_BASE}/news?region=${region}`)
-      .then(r => r.json())
-      .then(data => {
-        if (data.status === 'ok' && data.articles.length > 0) {
-          setLiveNews(data.articles)
-          setHasNewsAPI(true)
-        } else {
-          setLiveNews([])
-          setHasNewsAPI(false)
-        }
-      })
-      .catch(() => {
-        setLiveNews([])
-        setHasNewsAPI(false)
-      })
-      .finally(() => setNewsLoading(false))
-  }, [region])
-
-  // Use live news if available, else fall back to mock
-  const realNews = hasNewsAPI ? liveNews : (REAL_NEWS[region] || [])
-  const fakeNews = REGIONAL_FAKE_NEWS[region] || []
+  const [shareInput, setShareInput] = useState('')
+  const [showPaywall, setShowPaywall] = useState(false)
+  const [paywallFeature, setPaywallFeature] = useState('')
 
   return (
     <div className="screen" style={{ overflowY: 'auto', paddingBottom: 90 }}>
-
-      {/* HEADER */}
-      <div className="header" style={{ position: 'sticky', top: 0, zIndex: 200, background: 'var(--bg)' }}>
+      {showPaywall && <SubscriptionModal feature={paywallFeature} onClose={() => setShowPaywall(false)} />}
+      
+      {/* BRAND HEADER */}
+      <div className="header" style={{ position: 'sticky', top: 0, zIndex: 200, paddingBottom: 10 }}>
         <div className="header-row">
           <div>
-            <div className="logo">Reality<span>Layer</span></div>
-            <div className="header-sub">AI-Powered Truth Intelligence</div>
+            <div className="logo" style={{ fontSize: 24 }}>Re<span>Layer</span></div>
+            <div className="header-sub" style={{ fontSize: 13 }}>Command Center</div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <div style={{
-              width: 8, height: 8, borderRadius: '50%',
-              background: '#10b981', boxShadow: '0 0 6px #10b981',
-            }} />
-            <span style={{ fontSize: 11, color: '#10b981', fontWeight: 600 }}>LIVE</span>
-          </div>
-        </div>
-
-        {/* Region Tabs */}
-        <div style={{ display: 'flex', gap: 8, padding: '10px 16px', overflowX: 'auto', borderBottom: '1px solid var(--border)' }}>
-          {REGIONS.map(r => (
-            <button key={r.key} onClick={() => setRegion(r.key)} style={{
-              flexShrink: 0, padding: '7px 16px', borderRadius: 99, border: '1px solid',
-              fontSize: 12, fontWeight: 600, cursor: 'pointer',
-              background: region === r.key ? 'var(--accent)' : 'var(--surface)',
-              borderColor: region === r.key ? 'var(--accent)' : 'var(--border)',
-              color: region === r.key ? '#fff' : 'var(--text2)',
-              transition: 'all 0.2s',
-            }}>{r.label}</button>
-          ))}
+          <button style={{
+            background: 'var(--surface2)', border: '1px solid var(--border2)',
+            borderRadius: 20, width: 36, height: 36, cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16,
+          }}>👤</button>
         </div>
       </div>
 
-      {/* VERIFIED REAL NEWS */}
-      <div style={{ padding: '16px 16px 0' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-          <div style={{ width: 3, height: 20, background: '#10b981', borderRadius: 4 }} />
-          <span style={{ fontWeight: 700, fontSize: 15 }}>✅ Verified Real News</span>
-          <span style={{
-            fontSize: 10, padding: '2px 8px', borderRadius: 4, fontWeight: 700, marginLeft: 4,
-            background: hasNewsAPI ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)',
-            color: hasNewsAPI ? '#10b981' : '#f59e0b',
-          }}>{hasNewsAPI ? '🔴 LIVE' : '📦 DEMO'}</span>
-          {newsLoading && <span style={{ fontSize: 11, color: 'var(--text3)', marginLeft: 'auto' }}>Loading...</span>}
-        </div>
-
-        {realNews.map(item => (
-          <div key={item.id} className="section-card" style={{ marginBottom: 12, padding: 14 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8, marginBottom: 8 }}>
-              <span style={{
-                fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 4,
-                background: CATEGORY_COLORS[item.category] ? CATEGORY_COLORS[item.category] + '22' : '#6366f122',
-                color: CATEGORY_COLORS[item.category] || '#6366f1',
-              }}>{item.category}</span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <div style={{
-                  width: 22, height: 22, borderRadius: '50%', background: '#10b98122',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 10, fontWeight: 800, color: '#10b981',
-                }}>{item.trust_score}</div>
-              </div>
-            </div>
-            <div style={{ fontWeight: 600, fontSize: 14, lineHeight: 1.4, marginBottom: 6 }}>{item.headline}</div>
-            <div style={{ fontSize: 12, color: 'var(--text2)', lineHeight: 1.5, marginBottom: 8 }}>{item.summary}</div>
-            <div style={{ display: 'flex', gap: 12, fontSize: 11, color: 'var(--text3)' }}>
-              <span>📰 {item.source}</span>
-              <span>🕐 {item.timeAgo}</span>
-            </div>
-          </div>
-        ))}
-
-        {realNews.length === 0 && (
-          <div className="empty-state"><div className="empty-icon">📭</div><div className="empty-title">No data for this region yet</div></div>
-        )}
-      </div>
-
-      {/* DEBUNKED LOCAL FAKE NEWS */}
-      {fakeNews.length > 0 && (
-        <div style={{ padding: '16px 16px 0' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-            <div style={{ width: 3, height: 20, background: '#ef4444', borderRadius: 4 }} />
-            <span style={{ fontWeight: 700, fontSize: 15 }}>🚨 Debunked In Your Area</span>
-          </div>
-
-          {fakeNews.map(item => (
-            <div key={item.id} style={{
-              marginBottom: 12, padding: 14,
-              background: 'rgba(239,68,68,0.05)',
-              border: `1px solid ${item.severity === 'high' ? 'rgba(239,68,68,0.4)' : 'rgba(245,158,11,0.4)'}`,
-              borderRadius: 12,
+      <div style={{ padding: '16px 14px' }}>
+        
+        {/* PILLAR 1: Omni-Share Hub */}
+        <div className="fade-in" style={{
+          background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 24,
+          padding: '24px 20px', marginBottom: 20, boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
+        }}>
+          <h2 style={{ fontFamily: 'var(--font-head)', fontSize: 22, marginBottom: 8 }}>1. Share & Explore</h2>
+          <p style={{ color: 'var(--text2)', fontSize: 13, marginBottom: 16, lineHeight: 1.4 }}>
+            Share any social media link or content with us. We instantly break it down to check for Reality, or let you Remix it into your own creation.
+          </p>
+          <div style={{ display: 'flex', gap: 10 }}>
+            <input 
+              type="text" 
+              placeholder="Paste Instagram/X/YouTube link here..." 
+              value={shareInput}
+              onChange={(e) => setShareInput(e.target.value)}
+              style={{
+                flex: 1, background: 'var(--bg)', border: '1px solid var(--border2)',
+                borderRadius: 12, padding: '0 16px', color: '#fff', fontSize: 14,
+                boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.5)'
+              }}
+            />
+            <button style={{
+              background: 'linear-gradient(135deg, var(--accent), var(--accent2))', border: 'none',
+              borderRadius: 12, padding: '14px 20px', color: '#fff', fontWeight: 700, cursor: 'pointer',
+              boxShadow: '0 4px 15px rgba(99,102,241,0.3)'
             }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{
-                  fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 4,
-                  background: item.severity === 'high' ? 'rgba(239,68,68,0.15)' : 'rgba(245,158,11,0.15)',
-                  color: item.severity === 'high' ? '#ef4444' : '#f59e0b',
-                }}>{item.severity === 'high' ? '⚠️ HIGH RISK' : '⚡ MEDIUM RISK'}</span>
-                <span style={{ fontSize: 11, color: 'var(--text3)' }}>🔁 {item.shares} shares</span>
-              </div>
-              <div style={{ fontWeight: 600, fontSize: 14, lineHeight: 1.4, marginBottom: 6, color: 'var(--text)' }}>{item.headline}</div>
-              <div style={{ fontSize: 12, color: '#10b981', lineHeight: 1.5, background: 'rgba(16,185,129,0.08)', padding: '6px 10px', borderRadius: 6 }}>
-                ✔ Fact: {item.debunk}
-              </div>
-              <div style={{ fontSize: 11, color: 'var(--text3)', marginTop: 6 }}>via {item.platform}</div>
-            </div>
-          ))}
+              Explore →
+            </button>
+          </div>
         </div>
-      )}
 
-      <div style={{ height: 20 }} />
+        {/* PILLAR 2: News-to-Creator Engine (Premium) */}
+        <div className="fade-in" style={{
+          background: 'linear-gradient(135deg, rgba(168,85,247,0.1), rgba(99,102,241,0.05))',
+          border: '1px solid rgba(168,85,247,0.3)', borderRadius: 24, padding: '24px 20px',
+          marginBottom: 20, position: 'relative', overflow: 'hidden'
+        }}>
+          <div style={{ position: 'absolute', top: 16, right: 16, background: 'rgba(255,179,0,0.2)', color: 'var(--amber)', padding: '4px 10px', borderRadius: 8, fontSize: 10, fontWeight: 800, border: '1px solid rgba(255,179,0,0.4)', letterSpacing: 1 }}>PREMIUM</div>
+          
+          <h2 style={{ fontFamily: 'var(--font-head)', fontSize: 22, marginBottom: 8, color: '#fff' }}>2. Global Creator Engine</h2>
+          <p style={{ color: 'var(--text2)', fontSize: 13, marginBottom: 16, lineHeight: 1.4 }}>
+            Curious about creating content on popular news from local to globe? We pull trusted sources, structure the script, and generate an undetectable AI video using your voice and face.
+          </p>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            <button 
+              onClick={() => { setPaywallFeature('Global News Engine'); setShowPaywall(true); }}
+              style={{
+                background: 'var(--surface2)', border: '1px solid var(--border2)', borderRadius: 12, padding: '12px',
+                color: '#fff', fontWeight: 600, fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'center'
+              }}>🌍 Fetch Global News</button>
+            <button 
+              onClick={() => { setPaywallFeature('AI Persona Training'); setShowPaywall(true); }}
+              style={{
+                background: 'linear-gradient(135deg, #FF4B2B, #FF416C)', border: 'none', borderRadius: 12, padding: '12px',
+                color: '#fff', fontWeight: 600, fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'center',
+                boxShadow: '0 4px 15px rgba(255,65,108,0.3)'
+              }}>🎙️ Train My AI Persona</button>
+          </div>
+        </div>
+
+        {/* PILLAR 3: Live Social Monitor (Premium) */}
+        <div className="fade-in" style={{
+          background: 'linear-gradient(135deg, rgba(0,230,118,0.05), rgba(0,230,118,0.02))',
+          border: '1px solid rgba(0,230,118,0.2)', borderRadius: 24, padding: '24px 20px',
+          marginBottom: 20, position: 'relative'
+        }}>
+          <div style={{ position: 'absolute', top: 16, right: 16, background: 'rgba(255,179,0,0.2)', color: 'var(--amber)', padding: '4px 10px', borderRadius: 8, fontSize: 10, fontWeight: 800, border: '1px solid rgba(255,179,0,0.4)', letterSpacing: 1 }}>PREMIUM</div>
+          
+          <h2 style={{ fontFamily: 'var(--font-head)', fontSize: 22, marginBottom: 8, color: '#00E676' }}>3. Dynamic Social Monitor</h2>
+          <p style={{ color: 'var(--text2)', fontSize: 13, marginBottom: 16, lineHeight: 1.4 }}>
+            Want to check your social apps dynamically? We monitor and extract real intelligence live over your apps, keeping you safe while you scroll.
+          </p>
+          <button 
+            onClick={() => { setPaywallFeature('Live Social Monitor'); setShowPaywall(true); }}
+            style={{
+              width: '100%', background: 'rgba(0,230,118,0.1)', border: '1px solid #00E676', borderRadius: 12, padding: '14px',
+              color: '#00E676', fontWeight: 700, fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center'
+            }}>
+            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#00E676', boxShadow: '0 0 10px #00E676' }}></div>
+            Activate Live Overlay Module
+          </button>
+        </div>
+
+        {/* PILLAR 4: Reality Seal Protocol (Visionary) */}
+        <div className="fade-in" style={{
+          background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 24, padding: '24px 20px',
+          marginBottom: 20, position: 'relative', overflow: 'hidden'
+        }}>
+          <div style={{
+            position: 'absolute', right: -20, bottom: -20, width: 100, height: 100, borderRadius: '50%',
+            background: 'linear-gradient(135deg, var(--accent), transparent)', filter: 'blur(30px)', opacity: 0.5
+          }}></div>
+          <h2 style={{ fontFamily: 'var(--font-head)', fontSize: 22, marginBottom: 8 }}>4. The Reality Protocol</h2>
+          <p style={{ color: 'var(--text2)', fontSize: 13, marginBottom: 0, lineHeight: 1.4 }}>
+            Protect your digital identity. Every creation generated in ReLayer is cryptographically watermarked. By sealing your content, no one can successfully steal your persona without raising a Reality Alert. 
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 16 }}>
+             <span style={{ fontSize: 10, padding: '4px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.1)', color: 'var(--text2)', fontWeight: 700, border: '1px solid var(--border2)' }}>
+               🛡️ IDENTITY SECURED
+             </span>
+          </div>
+        </div>
+
+      </div>
     </div>
   )
 }

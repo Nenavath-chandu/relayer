@@ -9,7 +9,7 @@ const LABEL_EMOJI = {
   'UNKNOWN':      '❓',
 }
 
-export default function DetailScreen({ post, onBack }) {
+export default function DetailScreen({ post, onBack, onRemix }) {
   if (!post) return null
 
   const emoji = LABEL_EMOJI[post.label] || '🔍';
@@ -118,33 +118,52 @@ export default function DetailScreen({ post, onBack }) {
           <p className="original-content-text">{post.content}</p>
         </div>
 
-        <button
-          className="print-hide export-btn"
-          onClick={handleExportPDF}
-          style={{
-            width: '100%',
-            padding: '14px',
-            background: 'var(--surface)',
-            border: '1px solid var(--primary)',
-            borderRadius: 'var(--radius)',
-            color: 'var(--primary)',
-            fontFamily: 'var(--font-head)',
-            fontSize: 16,
-            fontWeight: 600,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 8,
-          }}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-             <polyline points="7 10 12 15 17 10"></polyline>
-             <line x1="12" y1="15" x2="12" y2="3"></line>
-          </svg>
-          Export Intelligence Brief (PDF)
-        </button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {/* Conditional Remix Button */}
+          {(post.label === 'AI-GENERATED' || post.label === 'FAKE' || post.label === 'DEEPFAKE SCAM') && (
+            <button
+              className="print-hide"
+              onClick={onRemix}
+              style={{
+                width: '100%', padding: '16px', background: 'linear-gradient(135deg, #6366f1, #a855f7)',
+                borderRadius: 'var(--radius)', color: '#fff', fontFamily: 'var(--font-head)',
+                fontSize: 16, fontWeight: 700, cursor: 'pointer', display: 'flex',
+                alignItems: 'center', justifyContent: 'center', gap: 8,
+                boxShadow: '0 10px 30px rgba(168,85,247,0.3)', border: 'none'
+              }}
+            >
+              <span style={{ fontSize: 20 }}>🎭</span> Try it yourself - Remix with ReLayer AI
+            </button>
+          )}
+
+          <button
+            className="print-hide export-btn"
+            onClick={handleExportPDF}
+            style={{
+              width: '100%',
+              padding: '14px',
+              background: 'var(--surface)',
+              border: '1px solid var(--accent)',
+              borderRadius: 'var(--radius)',
+              color: 'var(--accent2)',
+              fontFamily: 'var(--font-head)',
+              fontSize: 16,
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+               <polyline points="7 10 12 15 17 10"></polyline>
+               <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Export Intelligence Brief (PDF)
+          </button>
+        </div>
 
         <div style={{ height: 20 }} />
       </div>
