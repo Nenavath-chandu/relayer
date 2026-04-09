@@ -10,7 +10,7 @@ import StudioScreen from './screens/StudioScreen'
 import DetailScreen from './screens/DetailScreen'
 
 import NavBar from './components/NavBar'
-import './styles/App.css'
+import './styles/app.css'
 
 export default function App() {
   const [screen, setScreen] = useState('feed')
