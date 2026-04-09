@@ -1,4 +1,4 @@
-// ─── Existing Fact-Checked Posts ────────────────────────────────────────────
+// ─── Existing Fact-Checked Posts ───
 export const MOCK_POSTS = [
   {
     id: '1', label: 'FAKE', trust_score: 6, platform: 'WhatsApp', timeAgo: '2 min ago',
